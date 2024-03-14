@@ -59,11 +59,19 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source\Public;$(ProjectDir)ExternalLibs\Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)ExternalLibs\StaticLibs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>
+
+copy "$(ProjectDir)ExternalLibs\DynamicLibs\*.dll" "$(SolutionDir)Build\$(Configuration)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -75,16 +83,44 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source\Public;$(ProjectDir)ExternalLibs\Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)ExternalLibs\StaticLibs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>
+
+copy "$(ProjectDir)ExternalLibs\DynamicLibs\*.dll" "$(SolutionDir)Build\$(Configuration)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Private\Game.cpp" />
+    <ClCompile Include="Source\Private\GameObjects\GameObjects.cpp" />
+    <ClCompile Include="Source\Private\GameObjects\PhysicsObject.cpp" />
+    <ClCompile Include="Source\Private\GameObjects\SpriteObject.cpp" />
+    <ClCompile Include="Source\Private\Graphics\Animation.cpp" />
+    <ClCompile Include="Source\Private\Graphics\Texture.cpp" />
+    <ClCompile Include="Source\Private\Input.cpp" />
+    <ClCompile Include="Source\Private\Math\Vector2.cpp" />
     <ClCompile Include="Source\Source.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Public\Debug.h" />
+    <ClInclude Include="Source\Public\EngineTypes.h" />
+    <ClInclude Include="Source\Public\Game.h" />
+    <ClInclude Include="Source\Public\GameObjects\GameObjects.h" />
+    <ClInclude Include="Source\Public\GameObjects\PhysicsObject.h" />
+    <ClInclude Include="Source\Public\GameObjects\SpriteObject.h" />
+    <ClInclude Include="Source\Public\Graphics\Animation.h" />
+    <ClInclude Include="Source\Public\Graphics\Texture.h" />
+    <ClInclude Include="Source\Public\Input.h" />
+    <ClInclude Include="Source\Public\Math\Vector2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
