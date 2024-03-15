@@ -35,7 +35,8 @@ public:
 	float m_Angle;
 
 	float m_ScaleX, m_ScaleY; 
-
+	//determine whether or not render the texture 
+	bool m_IsVisible;
 
 private: 
 	//Texture that SDL understands

@@ -41,7 +41,8 @@ public:
 	void SetRotation(float Angle);
 
 	void SetScale(float Scale, float y);
-
+	//set the visibility of animation 
+	void SetVisible(float IsVisible);
 private:
 	Texture* m_TextureRef;
 

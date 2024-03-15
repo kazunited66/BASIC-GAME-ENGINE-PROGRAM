@@ -101,8 +101,12 @@ copy "$(ProjectDir)ExternalLibs\DynamicLibs\*.dll" "$(SolutionDir)Build\$(Config
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Private\Game.cpp" />
+    <ClCompile Include="Source\Private\GameObjects\Character.cpp" />
+    <ClCompile Include="Source\Private\GameObjects\Enemy.cpp" />
+    <ClCompile Include="Source\Private\GameObjects\Enemy2.cpp" />
     <ClCompile Include="Source\Private\GameObjects\GameObjects.cpp" />
     <ClCompile Include="Source\Private\GameObjects\PhysicsObject.cpp" />
+    <ClCompile Include="Source\Private\GameObjects\Player.cpp" />
     <ClCompile Include="Source\Private\GameObjects\SpriteObject.cpp" />
     <ClCompile Include="Source\Private\Graphics\Animation.cpp" />
     <ClCompile Include="Source\Private\Graphics\Texture.cpp" />
@@ -114,8 +118,12 @@ copy "$(ProjectDir)ExternalLibs\DynamicLibs\*.dll" "$(SolutionDir)Build\$(Config
     <ClInclude Include="Source\Public\Debug.h" />
     <ClInclude Include="Source\Public\EngineTypes.h" />
     <ClInclude Include="Source\Public\Game.h" />
+    <ClInclude Include="Source\Public\GameObjects\Character.h" />
+    <ClInclude Include="Source\Public\GameObjects\Enemy.h" />
+    <ClInclude Include="Source\Public\GameObjects\Enemy2.h" />
     <ClInclude Include="Source\Public\GameObjects\GameObjects.h" />
     <ClInclude Include="Source\Public\GameObjects\PhysicsObject.h" />
+    <ClInclude Include="Source\Public\GameObjects\Player.h" />
     <ClInclude Include="Source\Public\GameObjects\SpriteObject.h" />
     <ClInclude Include="Source\Public\Graphics\Animation.h" />
     <ClInclude Include="Source\Public\Graphics\Texture.h" />

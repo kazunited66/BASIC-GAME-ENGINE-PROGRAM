@@ -10,9 +10,9 @@
 
 
 //DEBUG
-#include"Graphics/Animation.h"
-#include"Math/Vector2.h"
-#include"GameObjects/PhysicsObject.h"
+#include"GameObjects/Player.h"
+#include"GameObjects/Enemy.h"
+#include"GameObjects/Enemy2.h"
 
 using namespace std;
 Game* Game::GetGame()
@@ -112,11 +112,6 @@ Game::Game()
 	m_WindowRef = nullptr;
 	m_RendererRef = nullptr;
 
-	//DEBUG VARS 
-	m_TestAniml = nullptr;
-	m_TestObject = nullptr;
-
-
 }
 
 Game::~Game()
@@ -174,8 +169,10 @@ void Game::Start()
 
 	//DEBUG
 
-
-	m_TestObject = AddGameObject<PhysicsObject>();
+	AddGameObject<Enemy>();
+	AddGameObject<Enemy2>();
+    AddGameObject<Player>();
+	
 
 	GameLoop();
 }
@@ -186,7 +183,7 @@ void Game::GameLoop()
 		PreLoop();
 
 		ProcessInput();
-
+		
 		Update();
 
 		Render();
@@ -275,43 +272,6 @@ void Game::Update()
 	// set the last tick time 
 	LastTickTime = CurrentTickTime;
 
-	/*//DEBUG 
-	//Position of the animation on the screen 
-	static Vector2 Position(640.0f, 360.0f);
-	float Speed(100.0f * (float)DeltaTime); //keep same speed 
-	Vector2 MovementDirection(0.0f);
-
-	if (m_GameInput->IsKeyDown(EE_KEY_W)) {
-		MovementDirection.y += -1.0f;
-	}
-	if (m_GameInput->IsKeyDown(EE_KEY_S)) {
-		MovementDirection.y += 1.0f;
-	}
-	if (m_GameInput->IsKeyDown(EE_KEY_A)) {
-		MovementDirection.x += -1.0f;
-	}
-	if (m_GameInput->IsKeyDown(EE_KEY_D)) {
-		MovementDirection.x += 1.0f;
-	}
-	if (m_GameInput->IsKeyDown(EE_KEY_Q)) {
-		if (m_TestObject != nullptr) {
-			m_TestObject->DestreyObject();
-			m_TestObject = nullptr;
-		}
-	}
-
-	// move the animation to the rigth 
-	Position += MovementDirection*Speed;
-
-
-
-	//TODO: Update game logic
-
-	if (m_TestAniml != nullptr) {
-		m_TestAniml->SetPosition(Position.x, Position.y);
-		m_TestAniml->Update((float)DeltaTime);
-	}
-	*/
 
 	//run the update logic for all game object 
 	for (auto GO : m_GameObjectStack) {
@@ -320,6 +280,15 @@ void Game::Update()
 			GO->PostUpdate((float)DeltaTime);
 		}
 	}
+
+	//caps the frame rate 
+	int FrameDuration = 1000 / 240;
+
+	if (FrameDuration > LongDelta) {
+		FrameDuration = (int)LongDelta;
+	}
+	// is the frame rate is greater than 240 delay the frame 
+	SDL_Delay((Uint32)FrameDuration);
 }
 
 void Game::Render()

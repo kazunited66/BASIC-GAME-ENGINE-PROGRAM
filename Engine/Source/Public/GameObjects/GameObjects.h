@@ -39,8 +39,6 @@ public:
 	//run evry frame
 	virtual void Update(float DeltaTime);
 
-
-
 	//runs every frame after the update 
 	void PostUpdate(float DeltaTime);
 

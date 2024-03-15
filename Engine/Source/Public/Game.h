@@ -7,8 +7,7 @@ class Texture;
 class Input;
 class GameObject;
 
-//DEBUG
-class Animation;
+
 class Game {
 public:
 	static Game* GetGame();
@@ -96,9 +95,5 @@ private:
 
 		//store all game objects 
 		TArray<GameObject*> m_GameObjectStack;
-		//DEBUG TESTING VARS
-		Animation* m_TestAniml;
-
-		GameObject* m_TestObject;
-		
+	
 };
