@@ -44,12 +44,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)Build\$(Configuration)</OutDir>
-    <IntDir>$(SolutionDir)intermidiate\$(configuration)</IntDir>
+    <OutDir>$(SolutionDir)Build\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)intermidiate\$(configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)Build\$(Configuration)</OutDir>
-    <IntDir>$(SolutionDir)intermidiate\$(configuration)</IntDir>
+    <OutDir>$(SolutionDir)Build\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)intermidiate\$(configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -65,7 +65,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)ExternalLibs\StaticLibs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -91,7 +91,7 @@ copy "$(ProjectDir)ExternalLibs\DynamicLibs\*.dll" "$(SolutionDir)Build\$(Config
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)ExternalLibs\StaticLibs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -103,14 +103,19 @@ copy "$(ProjectDir)ExternalLibs\DynamicLibs\*.dll" "$(SolutionDir)Build\$(Config
     <ClCompile Include="Source\Private\Game.cpp" />
     <ClCompile Include="Source\Private\GameObjects\Character.cpp" />
     <ClCompile Include="Source\Private\GameObjects\Enemy.cpp" />
-    <ClCompile Include="Source\Private\GameObjects\Enemy2.cpp" />
     <ClCompile Include="Source\Private\GameObjects\GameObjects.cpp" />
     <ClCompile Include="Source\Private\GameObjects\PhysicsObject.cpp" />
     <ClCompile Include="Source\Private\GameObjects\Player.cpp" />
     <ClCompile Include="Source\Private\GameObjects\SpriteObject.cpp" />
+    <ClCompile Include="Source\Private\GameObjects\TextObject.cpp" />
+    <ClCompile Include="Source\Private\GameStates\GameState.cpp" />
+    <ClCompile Include="Source\Private\GameStates\GameStateMachine.cpp" />
+    <ClCompile Include="Source\Private\GameStates\PlayState.cpp" />
     <ClCompile Include="Source\Private\Graphics\Animation.cpp" />
+    <ClCompile Include="Source\Private\Graphics\Text.cpp" />
     <ClCompile Include="Source\Private\Graphics\Texture.cpp" />
     <ClCompile Include="Source\Private\Input.cpp" />
+    <ClCompile Include="Source\Private\Math\Bounds.cpp" />
     <ClCompile Include="Source\Private\Math\Vector2.cpp" />
     <ClCompile Include="Source\Source.cpp" />
   </ItemGroup>
@@ -120,14 +125,20 @@ copy "$(ProjectDir)ExternalLibs\DynamicLibs\*.dll" "$(SolutionDir)Build\$(Config
     <ClInclude Include="Source\Public\Game.h" />
     <ClInclude Include="Source\Public\GameObjects\Character.h" />
     <ClInclude Include="Source\Public\GameObjects\Enemy.h" />
-    <ClInclude Include="Source\Public\GameObjects\Enemy2.h" />
     <ClInclude Include="Source\Public\GameObjects\GameObjects.h" />
     <ClInclude Include="Source\Public\GameObjects\PhysicsObject.h" />
     <ClInclude Include="Source\Public\GameObjects\Player.h" />
     <ClInclude Include="Source\Public\GameObjects\SpriteObject.h" />
+    <ClInclude Include="Source\Public\GameObjects\TextObject.h" />
+    <ClInclude Include="Source\Public\GameStates\GameState.h" />
+    <ClInclude Include="Source\Public\GameStates\GameStateMachine.h" />
+    <ClInclude Include="Source\Public\GameStates\PlayState.h" />
     <ClInclude Include="Source\Public\Graphics\Animation.h" />
+    <ClInclude Include="Source\Public\Graphics\Text.h" />
     <ClInclude Include="Source\Public\Graphics\Texture.h" />
+    <ClInclude Include="Source\Public\Graphics\TextureTypes.h" />
     <ClInclude Include="Source\Public\Input.h" />
+    <ClInclude Include="Source\Public\Math\Bounds.h" />
     <ClInclude Include="Source\Public\Math\Vector2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

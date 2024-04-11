@@ -1,17 +1,19 @@
 #pragma once
+#include "Graphics/TextureTypes.h"	
 
 struct SDL_Renderer;
 struct SDL_Texture;
 struct SDL_Surface;
 struct SDL_Rect;
 
+
 class Texture {
 public: 
 	Texture(SDL_Renderer* Renderer);
-	~Texture();
+	virtual ~Texture();
 
 	//draw the texture to the rendere 
-	bool ImportTexture(const char* PathToFile);
+	virtual bool ImportTexture(const char* PathToFile);
 
 	//copy the texture
 	void CopyTexture(Texture* CopyTexture);
@@ -20,7 +22,7 @@ public:
 	void Draw();
 
 	//deallocate memory 
-	void Cleanup();
+	virtual void Cleanup();
 
 	const char* GetPath() const { return m_Path; }
 
@@ -38,7 +40,9 @@ public:
 	//determine whether or not render the texture 
 	bool m_IsVisible;
 
-private: 
+	EAligment m_Alignment;
+
+protected: 
 	//Texture that SDL understands
 	SDL_Texture* m_TextureRef;
 

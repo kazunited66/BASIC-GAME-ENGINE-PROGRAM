@@ -1,10 +1,15 @@
 #include "GameObjects/Player.h"
 #include "Input.h"
+#include "GameObjects/Enemy.h"
 
 
 #define Super Charactor 
 #define ENGINE_IDLE 0
 #define ENGINE_POWERED 1
+#define SCALE 3.0f
+#define SIZE ((48.0f - 16.0f) * SCALE)
+#define HALF_SIZE (SIZE/2.0f)
+
 Player::Player()
 {
 	m_MaxSpeed  = 600.0f; 
@@ -40,13 +45,17 @@ Player::Player()
 	//hide the sprire by default 
 
 	SetPoweredEngines(false);
+
+	Bounds* PlayerBounds = AddBounds({ 640.0f,360.0f }, SIZE);
+	PlayerBounds->m_OriginalOffset = -HALF_SIZE;
+	
 }
 
 void Player::OnStart()
 {
 	Super::OnStart();
 	SetPosition({ 640.0f, 360.0f });
-	SetScale(3.0f);
+	SetScale(SCALE);
 }
 
 void Player::OnProcessInput(Input* GameInput)
@@ -89,5 +98,12 @@ void Player::SetPoweredEngines(bool Powered)
 			m_EngineEffects[ENGINE_POWERED]->SetActive(Powered);
 		}
 
+	}
+}
+
+void Player::OnOverlapEnter(Bounds* OverlapBoudns, Bounds* HitBounds)
+{
+	if (dynamic_cast<Enemy*>(OverlapBoudns->GetOwner())) {
+		OverlapBoudns->GetOwner()->DestreyObject();
 	}
 }

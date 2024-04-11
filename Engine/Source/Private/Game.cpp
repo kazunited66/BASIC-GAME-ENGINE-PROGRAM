@@ -5,14 +5,11 @@
 #include "Graphics/Texture.h"
 #include <vector>
 #include "Input.h"
-#include"GameObjects/GameObjects.h"
+#include"GameStates/GameStateMachine.h"
+#include"SDL2/SDL_ttf.h"
+#include "Graphics/Text.h"
+#include "Graphics/Texture.h"
 
-
-
-//DEBUG
-#include"GameObjects/Player.h"
-#include"GameObjects/Enemy.h"
-#include"GameObjects/Enemy2.h"
 
 using namespace std;
 Game* Game::GetGame()
@@ -94,16 +91,27 @@ void Game::DestroyTexture(Texture* TextureToDestroy)
 	EE_LOG("Game", "Texture has been destroyed.");
 }
 
-template<typename T>
- T* Game::AddGameObject()
+Text* Game::ImportText(const char* PathToFiile)
 {
-	T* NewObject = new T();
+	Text* NewText = new Text(m_RendererRef);
 
-	//add the object to our pending apwan array 
-	m_GameObjectPendingSpawn.push_back(NewObject);
+	if (!NewText->ImportTexture(PathToFiile)) {
+		delete NewText;
+		return nullptr;
+	}
 
-	return NewObject;
+	m_TextStack.push_back(NewText);
+	return NewText;
 }
+
+void Game::DestroyText(Text* TextToDestroy)
+{
+
+    std:erase_if(m_TextStack, [TextToDestroy](const auto Item) {return Item == TextToDestroy;  });
+	TextToDestroy->Cleanup();
+	delete TextToDestroy; 
+}
+
 
 Game::Game()
 {
@@ -111,6 +119,7 @@ Game::Game()
 	m_IsGameOpen = true;
 	m_WindowRef = nullptr;
 	m_RendererRef = nullptr;
+	m_GameStateMachine = nullptr;
 
 }
 
@@ -130,7 +139,14 @@ void Game::Initialise()
 		return;
 	}
 
+	if (TTF_Init() == -1) {
+		EE_LOG("Game", "TTF failed to init: " << TTF_GetError());
+		Cleanup();
+		return;
+	}
+
 	EE_LOG("Game", "Game successfully initialised all libraries");
+
 	Start();
 }
 
@@ -165,15 +181,9 @@ void Game::Start()
 	//create the game input 
 
 	m_GameInput = new Input();
-
-
-	//DEBUG
-
-	AddGameObject<Enemy>();
-	AddGameObject<Enemy2>();
-    AddGameObject<Player>();
-	
-
+	GameState* Default = new PlayState();
+	m_GameStateMachine = new GameStateMachine(Default);
+ 
 	GameLoop();
 }
 
@@ -195,34 +205,18 @@ void Game::GameLoop()
 	Cleanup();
 }
 
-void Game::PreLoop()
-{
-	//add all game object pending spwam to the game object stack 
-	for (auto GO : m_GameObjectPendingSpawn) {
-		m_GameObjectStack.push_back(GO);
-		GO->Start();
-		EE_LOG("game", "test");
-	}
-
-	m_GameObjectPendingSpawn.clear();
-}
-
 void Game::Cleanup()
 {
-	//desdtrtoy any object pending spwam 
-	for (auto GO : m_GameObjectPendingSpawn) {
-		GO->Cleanup();
-		delete GO;
-		GO = nullptr;
+	//run the cleanup 
+	m_GameStateMachine->Cleanup();
+
+	for (const auto Item : m_TextStack) {
+		Item->Cleanup();
+		delete Item;
 	}
-	//destroy any remaining  game object
-	for (auto GO : m_GameObjectStack) {
-		GO->Cleanup();
-		delete GO;
-		GO = nullptr;
-	}
+
 	// cleanup and remove all textures from the texture stack 
-	for (int i = m_TextureStack.size() - 1; i > -1;--i) {
+	for (int i = m_TextureStack.size() - 1; i > -1; --i) {
 		DestroyTexture(m_TextureStack[i]);
 	}
 
@@ -237,26 +231,27 @@ void Game::Cleanup()
 		//deallocate the window from memory
 		SDL_DestroyWindow(m_WindowRef);
 	}
-
+	TTF_Quit();
 	SDL_Quit();
 
 	EE_LOG("Game", "Gamer has dewallocated all memory");
 }
+
+void Game::PreLoop()
+{
+	//process the input for the game 
+	m_GameStateMachine->PreLoop();
+}
+
+
 
 void Game::ProcessInput()
 {
 	//process the input foe the game
 	m_GameInput->ProcessInput();
 
-	//run the input listner functiom for all game object 
-	for (auto GO : m_GameObjectStack) {
-		if (GO != nullptr) {
-			GO->ProcessInput(m_GameInput);
-		}
-	}
+	m_GameStateMachine->ProcessInput(m_GameInput);
 
-	
-	
 }
 
 void Game::Update()
@@ -272,19 +267,13 @@ void Game::Update()
 	// set the last tick time 
 	LastTickTime = CurrentTickTime;
 
-
-	//run the update logic for all game object 
-	for (auto GO : m_GameObjectStack) {
-		if (GO != nullptr) {
-			GO->Update((float)DeltaTime);
-			GO->PostUpdate((float)DeltaTime);
-		}
-	}
-
+	//run the active game state update
+	m_GameStateMachine->Update(static_cast<float>(DeltaTime));
+	
 	//caps the frame rate 
 	int FrameDuration = 1000 / 240;
 
-	if (FrameDuration > LongDelta) {
+	if ((double)FrameDuration > LongDelta) {
 		FrameDuration = (int)LongDelta;
 	}
 	// is the frame rate is greater than 240 delay the frame 
@@ -294,38 +283,31 @@ void Game::Update()
 void Game::Render()
 {
 	
-	SDL_SetRenderDrawColor(m_RendererRef, 25, 25, 25, 255);
+	SDL_SetRenderDrawColor(m_RendererRef, 50, 50, 50, 255);
 	//User the color just started to clear the previous frame and fill in with that colour 
 	SDL_RenderClear(m_RendererRef);
 
 	//TODO: Render custom graphics
-	for (Texture* TexRef : m_TextureStack) {
+	for(const auto TexRef : m_TextureStack) {
 		if (TexRef != nullptr) {
-
 			TexRef->Draw();
 		}
 	}
 	
-    
+	for (const auto Item : m_TextStack) {
+		if (Item != nullptr) {
+			Item->Draw();
+
+		}
+	}
+	m_GameStateMachine->Render(m_RendererRef);
+
+	
 	//Present the graphics to the renderer 
 	SDL_RenderPresent(m_RendererRef);
 }
 
 void Game::CollectGarbage()
 {
-	//TODO: Delete object at the end of each frame
-	for (int i = m_GameObjectStack.size() - 1; i >= 0; --i) {
-		if (!m_GameObjectStack[i]->IsPendingDestroy()) {
-			continue;
-		 }
-
-		//make sure the game object is not nullptr 
-		if (m_GameObjectStack[i] != nullptr) {
-			m_GameObjectStack[i]->Cleanup();
-			delete m_GameObjectStack[i];
-		}
-
-		//remove from and resize the array 
-		m_GameObjectStack.erase(m_GameObjectStack.begin() + i);
-	}
+	m_GameStateMachine->GarbageCollection();
 }

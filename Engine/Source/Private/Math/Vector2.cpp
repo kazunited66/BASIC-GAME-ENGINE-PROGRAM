@@ -4,7 +4,7 @@
 using namespace std;
 
 #define MINNORMAL 0.00001f
-Vector2 Vector2::operator/(const Vector2& Other)
+Vector2 Vector2::operator/(const Vector2& Other) const
 {
 
 	Vector2 NewVector(NaN());
@@ -29,7 +29,7 @@ Vector2& Vector2::operator/=(const Vector2& Other)
 {
 	return *this = *this / Other;
 }
-Vector2 Vector2::operator/(const float& Scalar)
+Vector2 Vector2::operator/(const float& Scalar) const
 {
 	if (Scalar == 0.0f) {
 		EE_LOG("Vector2", "Cannot divide by zero, returnnig a NaN vector2.");

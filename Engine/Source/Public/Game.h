@@ -5,7 +5,10 @@ struct SDL_Window;
 struct SDL_Renderer;
 class Texture;
 class Input;
-class GameObject;
+class GameStateMachine;
+class Text;
+
+
 
 
 class Game {
@@ -25,9 +28,13 @@ public:
 	//safe destory the texture
 	void DestroyTexture(Texture* TextureToDestroy);
 
-	//add a game object to the game
-	template<typename T>
-    T* AddGameObject();
+	Text* ImportText(const char* PathToFiile);
+
+	void DestroyText(Text* TextToDestroy);
+
+	GameStateMachine* GetGameStateMachine() const { return m_GameStateMachine; }
+	
+
 
 
 private:
@@ -75,6 +82,8 @@ private:
 	//Any object that are marked for delete will be deallocated from memory here 
 	void CollectGarbage();
 
+
+
 	private :
 		// flag that decides when the game loop ends 
 		bool m_IsGameOpen;
@@ -87,13 +96,12 @@ private:
 
 		//store all of the texture in the game 
 		TArray<Texture*> m_TextureStack;
+		 
+		TArray<Text*> m_TextStack;
 
 		//store the input for the game 
 		Input* m_GameInput; 
 
-		TArray<GameObject*>m_GameObjectPendingSpawn;
-
-		//store all game objects 
-		TArray<GameObject*> m_GameObjectStack;
+		GameStateMachine* m_GameStateMachine;
 	
 };

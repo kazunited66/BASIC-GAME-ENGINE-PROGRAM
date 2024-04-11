@@ -2,7 +2,7 @@
 #include "Math/Vector2.h"
 #include<EngineTypes.h>
 class Input;
-
+class Bounds; 
 struct EETransform {
 	//default structor 
 	EETransform() : Position(0.0f), Rotation(0.0f), Scale(1.0f) {}
@@ -49,7 +49,8 @@ public:
 	bool IsPendingDestroy() const { return m_ShouldDestroy; }
 
 	//remove any memory reference 
-	virtual void Cleanup() {}
+	virtual void Cleanup();
+
 
 	//Position, Rotation, Scale
 
@@ -61,6 +62,12 @@ public:
 	void SetPosition(Vector2 Position);
 	void SetRotation(float Rotation);
 	void SetScale(Vector2 Scale);
+	//test which bounds event needs to run 
+	void TestOverlapEvent(Bounds* OtherBounds);
+
+	TArray<Bounds*>GetAllBounds() const { return m_BoundsStack; }
+
+	void CollectGarbage();
 
 protected:
 	//run when the game object has been marked for destroy 
@@ -74,12 +81,21 @@ protected:
 	//run on the game object post update (each frame after the update)
 	virtual void OnPostUpdate(float DeltaTime) {}
 
+	virtual void OnOverlapEnter(Bounds* OverlapBounds, Bounds* HitBounds) {}
+
+	virtual void OnOverlapExit(Bounds* OverlapBounds, Bounds* HitBounds) {}
+
+	Bounds* AddBounds(Vector2 Center = 0.0f, Vector2 Extent = 1.0f);
+
+private:
+	//set all bounds to match the object position 
+	void BoundsMatchObjectPosition();
 private:
 	//determine is the object should be destroyed at the end of thr loop 
 	bool m_ShouldDestroy;
 
 	EETransform m_Transform; 
 
-
+	TArray<Bounds*> m_BoundsStack;
 
 };

@@ -4,7 +4,7 @@
 #include"Debug.h"
 
 
-Texture::Texture(SDL_Renderer* Renderer) 
+Texture::Texture(SDL_Renderer* Renderer)
 {
 	m_RendererRef = Renderer;
 	m_Angle = 0.0f;
@@ -15,7 +15,7 @@ Texture::Texture(SDL_Renderer* Renderer)
 	m_ScaleX = m_ScaleY = 1.0f;
 	m_ClipRect = nullptr;
 	m_IsVisible = true;
-
+	m_Alignment = AL_CENTER;
 }
 
 Texture::~Texture()
@@ -81,10 +81,43 @@ void Texture::Draw()
 		DestRect.h = m_ClipRect->h * m_ScaleY;
 
 	}
+	switch (m_Alignment)
+	{
+	case AL_CENTER:
+		// move the texture to be center at the middle point of the image 
+		DestRect.x -= DestRect.w / 2;
+		DestRect.y -= DestRect.h / 2;
+		break;
+	case AL_LEFT:
+		DestRect.y -= DestRect.h / 2;
+		break;
+	case AL_RIGHT:
+		DestRect.x -= DestRect.w;
+		DestRect.y -= DestRect.h / 2;
+		break;
+	case AL_TOP_LEFT:
+		break;
+	case AL_TOP_RIGHT:
+		DestRect.x -= DestRect.w ;
+		break;
+	case AL_TOP_CENTER:
+		DestRect.x -= DestRect.w / 2;
+		break;
+	case AL_BOTTOM_LEFT:
+		DestRect.y -= DestRect.h;
+	case AL_BOTTOM_RIGHT:
+		DestRect.y -= DestRect.h;
+		DestRect.x -= DestRect.w;
+		break;
+	case AL_BOTTOM_CENTER:
+		DestRect.y -= DestRect.h;
+		DestRect.x -= DestRect.w;
+		
+		break;
+	default:
+		break;
+	}
 
-	// move the texture to be center at the middle point of the image 
-	DestRect.x -= DestRect.w / 2;
-	DestRect.y -= DestRect.h / 2;
 
 	SDL_FPoint Center{
 		DestRect.w / 2,

@@ -21,7 +21,7 @@ Animation::~Animation()
 	if (m_TextureRef != nullptr) {
 		Game::GetGame()->DestroyTexture(m_TextureRef);
 	}
-	Game::GetGame()->DestroyTexture(m_TextureRef);
+	
 }
 
 bool Animation::CreateAnimation(const char* PathToFile, AnimationParams* Params )

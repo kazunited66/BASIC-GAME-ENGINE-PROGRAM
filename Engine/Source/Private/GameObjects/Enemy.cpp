@@ -3,14 +3,16 @@
 #define Super Charactor 
 
 #define SCALE 3.0f
-#define SIZE (48.0f * SCALE)
+#define SIZE ((48.0f - 16.0f) * SCALE)
 #define HALF_SIZE (SIZE / 2.0f)
 Enemy::Enemy()
 {
 	m_MaxSpeed = 100.0f;
 	m_MainSprite = AddSprite(
 		"Content/Sprites/Main Ship/MAin Ship - Bases/PNGs/Main Ship - Base - Very damaged.png");
-
+	Bounds* EnemyBounds = AddBounds(0.0f, SIZE);
+	EnemyBounds->m_OriginalOffset = -HALF_SIZE;
+	EnemyBounds->m_Tag = "ENEMY";
 }
 
 void Enemy::OnStart()
