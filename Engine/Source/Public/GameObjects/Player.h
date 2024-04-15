@@ -6,7 +6,7 @@ class Player : public Charactor {
 public: 
 	Player(); 
 protected: 
-	virtual void OnStart() override; 
+
 
 	virtual void OnProcessInput(Input* GameInput) override;
 

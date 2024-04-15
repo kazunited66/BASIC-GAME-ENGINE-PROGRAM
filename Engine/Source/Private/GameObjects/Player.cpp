@@ -6,16 +6,15 @@
 #define Super Charactor 
 #define ENGINE_IDLE 0
 #define ENGINE_POWERED 1
-#define SCALE 3.0f
-#define SIZE ((48.0f - 16.0f) * SCALE)
-#define HALF_SIZE (SIZE/2.0f)
 
 Player::Player()
 {
 	m_MaxSpeed  = 600.0f; 
 	m_Deceleration = 5.0f;
 	m_AccelerationSpeed = 5000.0f;
-	
+	m_Scale = 3.0f;
+	m_Size = 48.0f - 16.0f;
+
 	AddSprite(
 		"Content/Sprites/Main Ship/MAin Ship - Engines/PNGs/Main Ship - Engines - Supercharged Engine.png"
 	);
@@ -46,17 +45,14 @@ Player::Player()
 
 	SetPoweredEngines(false);
 
-	Bounds* PlayerBounds = AddBounds({ 640.0f,360.0f }, SIZE);
-	PlayerBounds->m_OriginalOffset = -HALF_SIZE;
+	SetScale(m_Scale);
+
+	Bounds* PlayerBounds = AddBounds( 0, ScaleSize());
+	PlayerBounds->m_OriginalOffset = -ScaleHalfSize();
 	
 }
 
-void Player::OnStart()
-{
-	Super::OnStart();
-	SetPosition({ 640.0f, 360.0f });
-	SetScale(SCALE);
-}
+
 
 void Player::OnProcessInput(Input* GameInput)
 {

@@ -2,30 +2,27 @@
 
 #define Super Charactor 
 
-#define SCALE 3.0f
-#define SIZE ((48.0f - 16.0f) * SCALE)
-#define HALF_SIZE (SIZE / 2.0f)
 Enemy::Enemy()
 {
 	m_MaxSpeed = 100.0f;
+	m_Scale = 3.0f;
+	m_Size = 48.0f - 16.0f;
+
 	m_MainSprite = AddSprite(
 		"Content/Sprites/Main Ship/MAin Ship - Bases/PNGs/Main Ship - Base - Very damaged.png");
-	Bounds* EnemyBounds = AddBounds(0.0f, SIZE);
-	EnemyBounds->m_OriginalOffset = -HALF_SIZE;
+
+	//change the scale
+	SetScale(m_Scale);
+
+
+	//flip it 180 to look downward
+	SetRotation(180.0f);
+
+	Bounds* EnemyBounds = AddBounds(0.0f, ScaleSize());
+	EnemyBounds->m_OriginalOffset = -ScaleHalfSize();
 	EnemyBounds->m_Tag = "ENEMY";
 }
 
-void Enemy::OnStart()
-{
-	Super::OnStart();
-
-	//start the enemy above the screan 
-	SetPosition({ 640.0f, 0.0f - HALF_SIZE });
-	//flip it 180 to look downward
-	SetRotation(180.0f);
-	//change the scale
-	SetScale(SCALE);
-}
 
 void Enemy::OnUpdate(float DeltTime)
 {
@@ -33,8 +30,7 @@ void Enemy::OnUpdate(float DeltTime)
 
 	AddMovementInput(Vector2(0.0f, 1.0f));
 
-	if (GetTransform().Position.y -
-		HALF_SIZE > 720.0f) {
-		SetPosition({ 640.0f, 0.0f - HALF_SIZE });
+	if (GetTransform().Position.y - ScaleHalfSize() > 720.0f) {
+		DestreyObject();
 	}
 }

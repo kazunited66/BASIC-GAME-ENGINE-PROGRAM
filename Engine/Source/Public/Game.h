@@ -34,7 +34,13 @@ public:
 
 	GameStateMachine* GetGameStateMachine() const { return m_GameStateMachine; }
 	
+	int WindowWidth() const;
 
+	int WindowHeight() const;
+
+	float WindowWidthF() const;
+
+	float WindowHeightF() const;
 
 
 private:

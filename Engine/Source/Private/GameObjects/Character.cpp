@@ -1,6 +1,13 @@
 #include"GameObjects/Character.h"
 #define Super PhysicsObject
-Charactor::Charactor() : m_MainSprite(nullptr), m_AccelerationSpeed(2000.0f){}
+Charactor::Charactor() :
+	m_MainSprite(nullptr),
+	m_AccelerationSpeed(2000.0f),
+	m_Scale(1.0f),
+	m_Size(1.0f)
+	
+
+{}
 
 void Charactor::AddMovementInput(Vector2 Direction, float Scale)
 {
